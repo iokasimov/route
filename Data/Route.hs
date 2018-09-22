@@ -1,12 +1,12 @@
-module Data.Route (Route (..), Reference (..)) where
+module Data.Route (Route (..), Reference (..), (</>), parent) where
 
 import "base" Data.Foldable (Foldable (foldr))
-import "base" Data.Function (($))
+import "base" Data.Function ((.), ($))
 import "base" Data.Functor (Functor (fmap), (<$>))
 import "base" Data.Maybe (Maybe (Just, Nothing))
 import "base" Data.Semigroup ((<>))
 import "base" Text.Show (Show (show))
-import "free" Control.Comonad.Cofree (Cofree ((:<)))
+import "free" Control.Comonad.Cofree (Cofree ((:<)), unwrap)
 
 type Stack = Cofree Maybe
 
@@ -34,3 +34,12 @@ instance Foldable (Route Absolute) where
 
 instance Foldable (Route Relative) where
 	foldr f acc (Route r) = foldr f acc r
+
+-- | You can merge only absolute and relative paths
+(</>) :: Route Absolute resource -> Route Relative resource -> Route Absolute resource
+Route absolute </> Route (x :< Just xs) = (Route . (:<) x . Just $ absolute) </> Route xs
+Route absolute </> Route (x :< Nothing) = Route . (:<) x . Just $ absolute
+
+-- | Get the parent route part: directory, fragment, etc...
+parent :: Route Absolute a -> Maybe (Route Absolute a)
+parent = (<$>) Route . unwrap . route
