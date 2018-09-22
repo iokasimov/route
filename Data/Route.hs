@@ -1,4 +1,4 @@
-module Data.Route where
+module Data.Route (Route (..), Reference (..)) where
 
 import "base" Data.Foldable (Foldable (foldr))
 import "base" Data.Function (($))
