@@ -2,12 +2,16 @@ module Data.Route.Usage.FHS (Path (..), current) where
 
 -- | Filesystem Hierarchy Standard
 
-data Path = Root
+data Filepath = Root
 	| Full (Route Absolute String)
 	| Partial (Route Relative String)
+	deriving Show
 
-current :: IO Path
-current = getCurrentDirectory >>= \case
-	"/" -> pure Root
-	d -> pure . maybe Root (Full . Route)
-		. foldaway . splitOn "/" . tail $ d
+-- | Get current working directory
+cwd :: IO Filepath
+cwd = parse <$> getCurrentDirectory where
+
+	parse :: String -> Filepath
+	parse "/" = Root
+	parse directory = maybe Root (Full . Route) . foldaway
+		. reverse . splitOn "/" . tail $ directory
