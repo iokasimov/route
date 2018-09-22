@@ -1,10 +1,10 @@
-module Data.Route.Usage.FHS (Filepath (..), current) where
+module Data.Route.Usage.FHS (Filepath (..), current, stringify) where
 
 -- | Filesystem Hierarchy Standard
 import "apart" Data.Apart.Structures.Stack (foldaway)
 import "base" Data.Function ((.), ($))
 import "base" Data.Functor ((<$>))
-import "base" Data.List (reverse, tail)
+import "base" Data.List (init, reverse, tail)
 import "base" Data.Maybe (maybe)
 import "base" Data.String (String)
 import "base" Text.Show (Show (show))
@@ -27,3 +27,8 @@ current = parse <$> getCurrentDirectory where
 	parse "/" = Root
 	parse directory = maybe Root (Full . Route) . foldaway
 		. reverse . splitOn "/" . tail $ directory
+
+stringify :: Filepath -> String
+stringify Root = "/"
+stringify (Full route) = (:) '/' . intercalate "/" . foldr (:) [] $ route
+stringify (Partial route) = intercalate "/" . foldr (:) [] $ route
