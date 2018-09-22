@@ -21,7 +21,7 @@ library
     Data.Route
     Data.Route.Usage.FHS
     Data.Route.Usage.URI
-  build-depends: base, free
+  build-depends: apart, base, free
   default-language: Haskell2010
   default-extensions:
     DataKinds

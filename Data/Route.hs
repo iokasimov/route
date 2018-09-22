@@ -1,5 +1,6 @@
 module Data.Route (Route (..), Reference (..), (</>), parent) where
 
+import "apart" Data.Apart.Structures.Stack (Stack)
 import "base" Data.Foldable (Foldable (foldr))
 import "base" Data.Function ((.), ($))
 import "base" Data.Functor (Functor (fmap), (<$>))
@@ -7,8 +8,6 @@ import "base" Data.Maybe (Maybe (Just, Nothing))
 import "base" Data.Semigroup ((<>))
 import "base" Text.Show (Show (show))
 import "free" Control.Comonad.Cofree (Cofree ((:<)), unwrap)
-
-type Stack = Cofree Maybe
 
 data Reference = Absolute | Relative
 
